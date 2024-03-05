@@ -88,33 +88,38 @@ $(document).ready(function(){
 
     // 3.Countdown timer 
         
-        function makeTimer() {
-
-                var endTime = new Date("March 30, 2024 12:00:00 PDT");            
-                var endTime = (Date.parse(endTime)) / 1000;
-
-                var now = new Date();
-                var now = (Date.parse(now) / 1000);
-
-                var timeLeft = endTime - now;
-
-                var days = Math.floor(timeLeft / 86400); 
-                var hours = Math.floor((timeLeft - (days * 86400)) / 3600);
-                var minutes = Math.floor((timeLeft - (days * 86400) - (hours * 3600 )) / 60);
-                var seconds = Math.floor((timeLeft - (days * 86400) - (hours * 3600) - (minutes * 60)));
-
-                if (hours < "10") { hours = "0" + hours; }
-                if (minutes < "10") { minutes = "0" + minutes; }
-                if (seconds < "10") { seconds = "0" + seconds; }
-
-                $("#days").html(days + '<span class="camp">Days</span>');
-                $("#hours").html(hours + '<span class="camp">Hour</span>');
-                $("#minutes").html(minutes + '<span class="camp">Minute</span>');
-                $("#seconds").html(seconds + '<span class="camp">Second</span>');       
-
+    function makeTimer() {
+        var endTime = new Date("March 30, 2024 12:0:00 PDT");
+        var endTimeUnix = Date.parse(endTime) / 1000;
+        var nowUnix = Date.now() / 1000;
+        var timeLeft = endTimeUnix - nowUnix;
+    
+        if (timeLeft <= 0) {
+            // If the end time has passed, set all values to 0
+            $("#days").html("00" + '<span class="camp">Days</span>');
+            $("#hours").html("00" + '<span class="camp">Hour</span>');
+            $("#minutes").html("00" + '<span class="camp">Minute</span>');
+            $("#seconds").html("00" + '<span class="camp">Second</span>');
+            return;
         }
-        
-        setInterval(function() { makeTimer(); }, 1000);
+    
+        var days = Math.floor(timeLeft / 86400);
+        var hours = Math.floor((timeLeft % 86400) / 3600);
+        var minutes = Math.floor((timeLeft % 3600) / 60);
+        var seconds = Math.floor(timeLeft % 60);
+    
+        // Add leading zeros if needed
+        hours = hours < 10 ? "0" + hours : hours;
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+    
+        $("#days").html(days + '<span class="camp">Days</span>');
+        $("#hours").html(hours + '<span class="camp">Hour</span>');
+        $("#minutes").html(minutes + '<span class="camp">Minute</span>');
+        $("#seconds").html(seconds + '<span class="camp">Second</span>');
+    }
+    
+    setInterval(makeTimer, 1000);
 
     // 4. owl carousel
     
